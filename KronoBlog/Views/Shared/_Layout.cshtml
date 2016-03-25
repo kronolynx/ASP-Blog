@@ -52,17 +52,36 @@
                     <button type="submit" class="btn btn-default">Submit</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right">
-                    <li><a href="@Url.RouteUrl("login")">Login</a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Action</a></li>
-                            <li><a href="#">Another action</a></li>
-                            <li><a href="#">Something else here</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#">Separated link</a></li>
-                        </ul>
-                    </li>
+                    <!-- check if user is authenticated -->
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a href="@Url.RouteUrl("logout")">Logout</a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">@User.Identity.Name <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">View Profile</a></li>
+                                <li><a href="#">Edit Profile</a></li>
+                                <li><a href="#">Something else here</a></li>
+                                
+                                <!-- if user is admin extra options -->
+                                @if (User.IsInRole("admin"))
+                                {
+                                    <li role="separator" class="divider"></li>
+                                    <!--
+                                         url action goes to the action in the controller as we have 2 index posts routes we pass a third parameter
+                                        for the area to specify we want to go to the admin posts
+                                    -->
+                                    <li><a href="@Url.Action("index", "Posts", new { area="admin"})">View posts in admin</a></li>
+                                }
+                                
+                            </ul>
+                        </li>
+                    }
+                    else
+                    {
+                        <li><a href="@Url.RouteUrl("login")">Login</a></li>
+                    }
+                    
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
